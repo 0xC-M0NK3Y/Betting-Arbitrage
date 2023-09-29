@@ -34,7 +34,6 @@ def get_netbet_core(url):
 			tmp.append(names)
 			tmp.append(cotes)
 			ret.append(tmp)
-
 	return ret
 
 def get_netbet_football():
@@ -50,17 +49,16 @@ def get_netbet_baseball():
 def get_netbet_boxe():
 	return get_netbet_core('https://www.netbet.fr/boxe?tab=a-venir')
 
+netbet = {
+	'football':   get_netbet_football,
+	'tennis':     get_netbet_tennis,
+	'basketball': get_netbet_basketball,
+	'handball':   get_netbet_handball,
+	'baseball':   get_netbet_baseball,
+	'boxe':       get_netbet_boxe 
+}
+
 def get_netbet(sport):
-	if sport == 'football':
-		return get_netbet_football()
-	elif sport == 'tennis':
-		return get_netbet_tennis()
-	elif sport == 'basketball':
-		return get_netbet_basketball()
-	elif sport == 'handball':
-		return get_netbet_handball()
-	elif sport == 'baseball':
-		return get_netbet_baseball()
-	elif sport == 'boxe':
-		return get_netbet_boxe()
+	if sport in netbet:
+		return netbet[sport]()
 	return []

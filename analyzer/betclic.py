@@ -35,13 +35,14 @@ def get_betclic_handball():
 def get_betclic_tennis():
 	return get_betclic_core('https://offer.cdn.begmedia.com/api/pub/v4/sports/2?application=2&countrycode=fr&hasSwitchMtc=true&language=fr&limit=120&markettypeId=2013&offset=0&sitecode=frfr&sortBy=ByLiveRankingPreliveDate')
 
+betclic = {
+	'football': get_betclic_football,
+	'tennis':   get_betclic_tennis,
+	'handball': get_betclic_handball,
+	'baseball': get_betclic_baseball
+}
+
 def get_betclic(sport):
-	if sport == 'football':
-		return get_betclic_football()
-	elif sport == 'tennis':
-		return get_betclic_tennis()
-	elif sport == 'handball':
-		return get_betclic_handball()
-	elif sport == 'baseball':
-		return get_betclic_baseball()
+	if sport in betclic:
+		return betclic[sport]()
 	return []

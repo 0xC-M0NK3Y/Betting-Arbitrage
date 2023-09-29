@@ -21,8 +21,11 @@ def get_winamax_core(url):
 
         cotes = []
 
-        tmp = data['bets'][str(data['matches'][matches]['mainBetId'])]['outcomes']
-        if tmp == None or len(tmp) not in (2,3):
+        try:
+            tmp = data['bets'][str(data['matches'][matches]['mainBetId'])]['outcomes']
+            if tmp == None or len(tmp) not in (2,3):
+                continue
+        except:
             continue
         cotes = []
         s = False
@@ -52,15 +55,14 @@ def get_winamax_tennis():
 def get_winamax_handball():
     return get_winamax_core('https://www.winamax.fr/paris-sportifs/sports/6')
 
+winamax = {
+    'football': get_winamax_football,
+    'baseball': get_winamax_baseball,
+    'tennis':   get_winamax_tennis,
+    'handball': get_winamax_handball
+}
+
 def get_winamax(sport):
-    if sport == 'football':
-        return get_winamax_football()
-    elif sport == 'baseball':
-        return get_winamax_baseball()
-    elif sport == 'tennis':
-        return get_winamax_tennis()
-    elif sport == 'handball':
-        return get_winamax_handball()
+    if sport in winamax:
+        return winamax[sport]()
     return []
-
-

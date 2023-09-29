@@ -1,7 +1,4 @@
-from analyzer.betclic import get_betclic
-from analyzer.netbet import get_netbet
-from analyzer.winamax import get_winamax
-from analyzer.parionssport import get_parionssport
+from analyzer.analyzers import ANALYZERS
 
 def verif_len_and_parse(cotes):
 	lenn = len(cotes[0])
@@ -41,41 +38,36 @@ def print_site(site, name):
 	for i in range(len(site)):
 		print(site[i])
 
+def is_valid(names):
+	for i in range(len(names)):
+		for j in range(i+1, len(names)):
+			if names[i] == names[j]:
+				return False
+	return True
 
 def analyze_sport(sport):
 	ret = []
-
-	netbet = get_netbet(sport)
-	betclic = get_betclic(sport)
-	winamax = get_winamax(sport)
-	parionssport = get_parionssport(sport)
-
-	sites = []
-	sites.append(netbet)
-	sites.append(betclic)
-	sites.append(winamax)
-	sites.append(parionssport)
-
+	results = []
 	names = []
-	names.append("netbet")
-	names.append("betclic")
-	names.append("winamax")
-	names.append("parionssport")
 
-	for i in range(len(sites)):
-		for j in range(len(sites[i])):
+	for i in range(len(ANALYZERS)):
+		results.append(ANALYZERS[i][1](sport))
+		names.append(ANALYZERS[i][0])
+
+	for i in range(len(results)):
+		for j in range(len(results[i])):
 			cmp = []
 			cmp_name = []
 			cmp_name.append(names[i])
-			cmp.append(sites[i][j])
-			for k in range(len(sites)):
+			cmp.append(results[i][j])
+			for k in range(len(results)):
 				if k == i:
 					continue
-				for l in range(len(sites[k])):
-					if sites[i][j][0][0] == sites[k][l][0][0] or sites[i][j][0][1] == sites[k][l][0][1]:
+				for l in range(len(results[k])):
+					if results[i][j][0][0] == results[k][l][0][0] or results[i][j][0][1] == results[k][l][0][1]:
 						cmp_name.append(names[k])
-						cmp.append(sites[k][l])
-			if (len(cmp) > 1):
+						cmp.append(results[k][l])
+			if is_valid(cmp_name) and len(cmp) > 1:
 				result = compute(cmp)
 				if result < 0:
 					continue
